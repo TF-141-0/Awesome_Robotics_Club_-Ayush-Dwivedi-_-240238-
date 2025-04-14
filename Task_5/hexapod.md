@@ -1,4 +1,4 @@
-For this Project#3 I have mainly used the article given in project [questionnaire by you guys]([https://example.com](https://www.rosroboticslearning.com/inverse-kinematics))
+For this Project#3 I have mainly used the [article]([https://example.com](https://www.rosroboticslearning.com/inverse-kinematics)) given in project questionnaire by you guys 
 
 using Geometric Approach given in "EXAMPLE 2" which somewhat resembles with model given in our questionarie
 <img width="342" alt="mannipoolathor" src="https://github.com/user-attachments/assets/24bce11c-1ae5-4003-88fa-09dde488e377" />
@@ -59,6 +59,7 @@ thats why in my code ive kept gamma as negative to make it more practical
   I converted this into python form with small modifications for our model 
   {{ beta = math.degrees(atan2(z_local, x_local) - atan2(L3 * sin(math.radians(gamma)), L2 + L3 * cos(math.radians(gamma)))  }}
 
-  after this everything is basic logic and coding and conditions
+  after some testings with extreme values one time it gave "0.00000000000000000034blah" value ig this happened due float
+  function so i put a roundoff function.
 
 
