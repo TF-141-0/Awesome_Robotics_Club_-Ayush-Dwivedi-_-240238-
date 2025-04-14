@@ -57,7 +57,7 @@ def Test2_inverse_kinematics():
     start_test(x, y, z)
 
 def Test3_inverse_kinematics():
-    x, y, z = L1 + L2 + L3, 0.0, 0.0
+    x, y, z = 0.0, 30.0, 0.0
     start_test(x, y, z)
 
 def Test4_inverse_kinematics():
