@@ -9,7 +9,7 @@ L2 = 10.0  # femur (vertical plane)
 L3 = 15.0  # tibia (extends from femur)
 
 # ================================
-# Round off small angles to zero
+# Round off small angles to zero (i need to add this cause in some of my independent checks i realised this)
 # ================================
 def clean_angle(angle, threshold=1e-4):
     return 0.0 if abs(angle) < threshold else round(angle, 2)
@@ -31,8 +31,8 @@ def inverse_kinematics(x, y, z):
         return None
 
     try:
-        gamma = -math.degrees(acos((dist**2 - L2**2 - L3**2) / (2 * L2 * L3)))  # Notice HERE if i take gamma to be +/- overall configuration of arm will with elbow down/up(read hexapod.md)
-    except ValueError:# I have explained about this with visual repesentation in hexapod.md
+        gamma = -math.degrees(acos((dist**2 - L2**2 - L3**2) / (2 * L2 * L3)))  # Notice HERE if i take gamma to be +/- overall configuration of arm will change as elbow down/up(read hexapod.md)
+    except ValueError:                                                          # I have explained about this with visual repesentation in hexapod.md
         return None
 
     beta = math.degrees(
@@ -115,7 +115,7 @@ def Test5_inverse_kinematics():
         print("Coordinates are reachable")
 
 # ================================
-# Run selected test
+# Run selected test by removing #
 # ================================
 #Test1_inverse_kinematics()
 #Test2_inverse_kinematics()
