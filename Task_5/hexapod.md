@@ -1,4 +1,6 @@
-For this Project#3 I have mainly used the [article](https://www.rosroboticslearning.com/inverse-kinematics) given in project questionnaire by you guys 
+For this Project#3 
+
+I have mainly used the [article](https://www.rosroboticslearning.com/inverse-kinematics) given in project questionnaire by you guys 
 
 using Geometric Approach given in "EXAMPLE 2" which somewhat resembles with model given in our questionarie
 <img width="342" alt="mannipoolathor" src="https://github.com/user-attachments/assets/24bce11c-1ae5-4003-88fa-09dde488e377" />
