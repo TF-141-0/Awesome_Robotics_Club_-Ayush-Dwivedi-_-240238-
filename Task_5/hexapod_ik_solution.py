@@ -2,18 +2,18 @@ import math
 from math import sin, cos, acos, atan2
 
 # Arm segment lengths
-# ================================
-L1 = 5.0   # coxa (rotates in XY plane)
-L2 = 10.0  # femur (vertical plane)
-L3 = 15.0  # tibia (extends from femur)
+
+L1 = 5.0  #(rotates in XY plane)
+L2 = 10.0  #(vertical plane)
+L3 = 15.0  #(extends from femur)
 
 # Round off Small angles to zero (i need to add this cause in some of my independent checks i realised this)
-# ================================
+
 def angle(angle, threshold=1e-4):
     return 0.0 if abs(angle) < threshold else round(angle, 2)
 
 # Function to Calculate joint angles
-# ================================
+
 def inverse_kinematics(x, y, z):
     alpha = math.degrees(atan2(y, x))  # phi1 (base rotation)
     
@@ -35,7 +35,7 @@ def inverse_kinematics(x, y, z):
     return [angle(alpha), angle(beta), angle(gamma)]
 
 # Test executer
-# ================================
+
 def start_test(x, y, z):
     angles = inverse_kinematics(x, y, z)
     print(f"Target Coordinates: ({x}, {y}, {z})")
@@ -69,7 +69,6 @@ def Test5_inverse_kinematics():
     start_test(x, y, z)
 
 # Run selected test by removing #
-# ================================
 
 #Test1_inverse_kinematics()
 #Test2_inverse_kinematics()
