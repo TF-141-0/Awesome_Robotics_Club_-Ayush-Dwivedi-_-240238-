@@ -1,77 +1,69 @@
-import math
-from math import sin, cos, acos, atan2
+#include <stdio.h>
+#include <math.h>
 
-# Arm segment lengths
+const double L1 = 5.0;
+const double L2 = 10.0;
+const double L3 = 15.0;
 
-L1 = 5.0  #(rotates in XY plane)
-L2 = 10.0  #(vertical plane)
-L3 = 15.0  #(extends from femur)
+ //Round off Small angles to zero (i need to add this cause in some of my independent checks i realised this)
 
-# Round off Small angles to zero (i need to add this cause in some of my independent checks i realised this)
+double angle(double a, double threshold) {
+    return (fabs(a) < threshold) ? 0.0 : round(a * 100.0) / 100.0;
+}
 
-def angle(angle, threshold=1e-4):
-    return 0.0 if abs(angle) < threshold else round(angle, 2)
+int inverse_kinematics(double x, double y, double z, double* alpha_out, double* beta_out, double* gamma_out)
+    {
+    double alpha = atan2(y, x) * 180.0 / M_PI;
 
-# Function to Calculate joint angles
+    double x_local = sqrt(x * x + y * y) - L1;
+    double z_local = z;
+    double dist = sqrt(x_local * x_local + z_local * z_local);
 
-def inverse_kinematics(x, y, z):
-    alpha = math.degrees(atan2(y, x))  # phi1 (base rotation)
-    
-    # i m establishing a local frame for better understanding of DOF
-    x_local = math.sqrt(x**2 + y**2) - L1
-    z_local = z
-    dist = math.sqrt(x_local**2 + z_local**2)
-    
-    if dist > (L2 + L3) or dist < abs(L2 - L3):
-        return None
+    if (dist > (L2 + L3) || dist < fabs(L2 - L3)) {
+        return 0;
+    }
 
-    try:
-        gamma = -math.degrees(acos((dist**2 - L2**2 - L3**2) / (2 * L2 * L3)))  # Notice HERE if i take gamma to be +/- overall configuration of arm will change as elbow down/up(read hexapod.md)
-    except ValueError:                                                          # I have explained about this with visual repesentation in hexapod.md
-        return None
+    double cos_gamma = (dist * dist - L2 * L2 - L3 * L3) / (2 * L2 * L3);
+    if (cos_gamma < -1.0 || cos_gamma > 1.0) {
+        return 0;
+    }
 
-    beta = math.degrees(atan2(z_local, x_local)-atan2(L3 * sin(math.radians(gamma)), L2 + L3 * cos(math.radians(gamma))))  # phi2
+    double gamma = -acos(cos_gamma) * 180.0 / M_PI; // # Notice HERE if i take gamma to be +/- overall configuration of arm will change as elbow down/up(read hexapod.md)
 
-    return [angle(alpha), angle(beta), angle(gamma)]
+    double gamma_rad = gamma * M_PI / 180.0;
+    double beta = atan2(z_local, x_local) - atan2(L3 * sin(gamma_rad), L2 + L3 * cos(gamma_rad));
+    beta = beta * 180.0 / M_PI;
 
-# Test executer
+    *alpha_out = angle(alpha, 1e-4);
+    *beta_out = angle(beta, 1e-4);
+    *gamma_out = angle(gamma, 1e-4);
 
-def start_test(x, y, z):
-    angles = inverse_kinematics(x, y, z)
-    print(f"Target Coordinates: ({x}, {y}, {z})")
-    if angles is None:
-        print(" Warning: Invalid target for leg")
-    else:
-        print(f"  Joint Angles: {angles}°")
-        print("  Coordinates are reachable")
+    return 1;
+}
 
-# Test cases
-# ================================
+void start_test(double x, double y, double z) {
+    double alpha, beta, gamma;
+    printf("Target Coordinates: (%.2f, %.2f, %.2f)\n", x, y, z);
+    if (inverse_kinematics(x, y, z, &alpha, &beta, &gamma)) {
+        printf("  Joint Angles: [%.2f°, %.2f°, %.2f°]\n", alpha, beta, gamma);
+        printf("  Coordinates are reachable\n");
+    } else {
+        printf("  Warning: Invalid target for leg\n");
+    }
+    printf("\n");
+}
 
-def Test1_inverse_kinematics():
-    x, y, z = 5.0, 5.0, 5.0
-    start_test(x, y, z)
+void Test1_inverse_kinematics() { start_test(5.0, 5.0, 5.0); }
+void Test2_inverse_kinematics() { start_test(0.1, 0.1, 0.1); }
+void Test3_inverse_kinematics() { start_test(0.0, 30.0, 0.0); }
+void Test4_inverse_kinematics() { start_test(100.0, 100.0, 100.0); }
+void Test5_inverse_kinematics() { start_test(5.0, 5.0, -10.0); }
 
-def Test2_inverse_kinematics():
-    x, y, z = 0.1, 0.1, 0.1
-    start_test(x, y, z)
-
-def Test3_inverse_kinematics():
-    x, y, z = 0.0, 30.0, 0.0
-    start_test(x, y, z)
-
-def Test4_inverse_kinematics():
-    x, y, z = 100.0, 100.0, 100.0
-    start_test(x, y, z)
-
-def Test5_inverse_kinematics():
-    x, y, z = 5.0, 5.0, -10.0
-    start_test(x, y, z)
-
-# Run selected test by removing #
-
-#Test1_inverse_kinematics()
-#Test2_inverse_kinematics()
-#Test3_inverse_kinematics()
-#Test4_inverse_kinematics()
-#Test5_inverse_kinematics()
+int main() {
+    Test1_inverse_kinematics();
+    Test2_inverse_kinematics();
+    Test3_inverse_kinematics();
+    Test4_inverse_kinematics();
+    Test5_inverse_kinematics();
+    return 0;
+}
